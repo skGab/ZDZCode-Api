@@ -4,11 +4,8 @@ using ZDZCode_Api.Src.Domain.Repositories;
 
 namespace ZDZCode_Api.Src.Application.Controllers
 {
-
     [ApiController]
     [FormatFilter]
-    [Route("[controller]")]
-
     public class BillsController(IBillsRepository billsRepository) : ControllerBase
     {
         private readonly IBillsRepository BillsRepository = billsRepository;

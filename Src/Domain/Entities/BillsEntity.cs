@@ -1,10 +1,14 @@
 ﻿namespace ZDZCode_Api.Src.Domain.Entities
 {
-    public class BillsEntity(string iD, string name, string value, DateTime date)
+    [Serializable]
+    public class BillsEntity(string name, string value, string userID)
     {
-        public string ID { get; set; } = iD;
-        public string Name { get; set; } = name;
-        public string Value { get; set; } = value;
-        public DateTime Date { get; set; } = date;
+        public Guid id { get; private set; } = Guid.NewGuid();
+        public string name { get; private set; } = name;
+        public string value { get; private set; } = value;
+        public DateTime date { get; init; } = DateTime.Now;
+
+        public string userID { get; private set; } = userID;
+        public virtual UserEntity? user { get;  private set; }
     }
 }

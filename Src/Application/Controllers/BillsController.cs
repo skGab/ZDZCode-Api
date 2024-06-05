@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using ZDZCode_Api.Src.Application.Dtos;
 using ZDZCode_Api.Src.Domain.Entities;
 using ZDZCode_Api.Src.Domain.Repositories;
-using static ZDZCode_Api.Src.Application.Controllers.BillsController;
 
 namespace ZDZCode_Api.Src.Application.Controllers
 {
@@ -21,14 +19,12 @@ namespace ZDZCode_Api.Src.Application.Controllers
 
         // GETT BILLS
         [HttpGet("bills/{userID}")]
-        public IEnumerable<BillsDto> GetBills(int userID)
+        public BillsPayload GetBills(int userID)
         {
-            // VALIDATE USER ID AND PASS TO STRING
-
-            // GET BILLS BASED ON THE USE ID
+            // GET BILLS BASED ON THE USER ID
             var bills = BillsRepository.GetAll(userID.ToString());
 
-            return bills.Select(bill => new BillsDto
+            var billsDto = bills.Select(bill => new BillsDto
             (
                 bill.id,
                 bill.name,
@@ -36,6 +32,22 @@ namespace ZDZCode_Api.Src.Application.Controllers
                 bill.date,
                 bill.userID
             ));
+
+            // Check if billsDto is empty
+            if (!billsDto.Any())
+            {
+                return new BillsPayload
+                (
+                    [],
+                    $"No bills found for the specified user ID: {userID}"
+                );
+            }
+
+            return new BillsPayload
+            (
+                billsDto,
+                "Bills retrieved successfully."
+            );
         }
 
         // CREATE BILLS
@@ -59,5 +71,45 @@ namespace ZDZCode_Api.Src.Application.Controllers
             }
         }
 
+        // DELETE ROUTE
+        [HttpDelete("bills/delete/{id}")]
+        async public Task<ActionResult> DeleteBill(Guid id)
+        {
+            _logger.LogInformation("{bill id:}", id);
+
+            // PASS IT TO THE REPOSITORY
+            var isCreated = await BillsRepository.Delete(id);
+
+            // RETURN RESPONSE
+            if (isCreated)
+            {
+                return Ok("Bill deleted");
+            }
+            else
+            {
+                return StatusCode(500, "Error while trying to delete the bill");
+            }
+        }
+
+        // UPDATE ROUTE
+        [HttpPut("bills/update/{id}")]
+        async public Task<ActionResult> UpdateBill(Guid id, UpdateBillDto billUpdate)
+        {
+            // VALIDATE THE BODY AMD SERIALIZE IT
+            ArgumentNullException.ThrowIfNull(billUpdate);
+
+            // PASS IT TO THE REPOSITORY
+            var updatedBill = await BillsRepository.Update(id, billUpdate);
+
+            // RETURN RESPONSE
+            if (updatedBill != null)
+            {
+                return Ok(updatedBill);
+            }
+            else
+            {
+                return StatusCode(500, "Error while trying to update the bill");
+            }
+        }
     }
 }

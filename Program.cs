@@ -1,13 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using ZDZCode_Api.Controllers;
+using ZDZCode_Api.Src.Domain.Repositories;
+using ZDZCode_Api.Src.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<BillsDb>(opt => opt.UseInMemoryDatabase("BillsManagment"));
+builder.Services.AddDbContext<DbAdapter>(opt => opt.UseInMemoryDatabase("BillsManagment"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Logging.AddConsole();
+
+// ADD SERVICES TO THE CONTAINER
+builder.Services.AddControllers();
+builder.Services.AddScoped<DbAdapter>();
+builder.Services.AddScoped<IBillsRepository, BillsRepository>();
+
 var app = builder.Build();
 
-// CREATE THE BILLS CONTROLLER INSTANCE
-var billsController = new BillsController();
-billsController.Build(app);
+app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();

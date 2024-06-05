@@ -1,0 +1,5 @@
+﻿@ZDZCode-Api_HostAddress = https://localhost:7218
+
+GET {{ZDZCode-Api_HostAddress}}/bills?userID=string
+
+###

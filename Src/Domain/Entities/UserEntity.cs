@@ -2,14 +2,20 @@
 
 namespace ZDZCode_Api.Src.Domain.Entities
 {
-    public class UserEntity(string id, string name, string email, int password)
+    public class UserEntity
     {
-        [Key]
-        public string id { get; set; } = id;
-        public string email { get; set; } = email;
-        public string name { get; set; } = name;
-        public int password { get; set; } = password;
+        public Guid id { get; set; } = Guid.NewGuid();
 
+        [Key]
+        public string email { get; set; }
+        public string password { get; set; }
         public ICollection<BillsEntity>? bills { get; }
+
+        // Constructor with parameters
+        public UserEntity(string email, string password)
+        {
+            this.email = email;
+            this.password = password;
+        }
     }
 }

@@ -5,21 +5,21 @@ using ZDZCode_Api.Src.Domain.Repositories;
 
 namespace ZDZCode_Api.Src.Infrastructure.Database
 {
-    public class BillsRepository(ILogger<BillsController> logger, DbAdapter dbAdapter) : IBillsRepository
+    public class BillsRepository(ILogger<UserController> logger, DbAdapter dbAdapter) : IBillsRepository
     {
         private readonly DbAdapter _dbAdapter = dbAdapter;
-        private readonly ILogger<BillsController> _logger = logger;
+        private readonly ILogger<UserController> _logger = logger;
 
         // GET ALL BILLS
-        BillsEntity[] IBillsRepository.GetAll(string userID)
+        BillsEntity[] IBillsRepository.GetAll(string userEmail)
         {
-            if (string.IsNullOrEmpty(userID))
+            if (string.IsNullOrEmpty(userEmail))
             {
                 _logger.LogError("User ID is null or empty");
                 return [];
             }
 
-            return [.. _dbAdapter.Bills.Where(b => b.userID == userID)];
+            return [.. _dbAdapter.Bills.Where(b => b.userEmail == userEmail)];
         }
 
         // CREATE BILL
@@ -39,18 +39,16 @@ namespace ZDZCode_Api.Src.Infrastructure.Database
 
                 if (task == 0)
                 {
-                    _logger.LogWarning("Failed to save changes to the database for user ID: {UserId}", data.userID);
+                    _logger.LogWarning("Failed to save changes to the database for user Email: {UserEmail}", data.userEmail);
                     return false;
                 };
-
-                _logger.LogInformation("ID do usuario: {UserId}", data.userID);
 
                 return true;
 
             }
             catch (Exception error)
             {
-                _logger.LogError(error, "An error occurred while creating the bill for user ID: {UserId}", data.userID);
+                _logger.LogError(error, "An error occurred while creating the bill for user Email: {UserEmail}", data.userEmail);
                 return false;
             }
         }

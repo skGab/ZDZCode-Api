@@ -18,11 +18,11 @@ namespace ZDZCode_Api.Src.Application.Controllers
         public string MainRoute() => "ZDZCode Bills Management API!";
 
         // GETT BILLS
-        [HttpGet("bills/{userID}")]
-        public BillsPayload GetBills(int userID)
+        [HttpGet("bills/{userEmail}")]
+        public BillsPayload GetBills(string userEmail)
         {
             // GET BILLS BASED ON THE USER ID
-            var bills = BillsRepository.GetAll(userID.ToString());
+            var bills = BillsRepository.GetAll(userEmail);
 
             var billsDto = bills.Select(bill => new BillsDto
             (
@@ -30,7 +30,7 @@ namespace ZDZCode_Api.Src.Application.Controllers
                 bill.name,
                 bill.value,
                 bill.date,
-                bill.userID
+                bill.userEmail
             ));
 
             // Check if billsDto is empty
@@ -39,7 +39,7 @@ namespace ZDZCode_Api.Src.Application.Controllers
                 return new BillsPayload
                 (
                     [],
-                    $"No bills found for the specified user ID: {userID}"
+                    $"No bills found for the specified user e-mail: {userEmail}"
                 );
             }
 
@@ -83,11 +83,11 @@ namespace ZDZCode_Api.Src.Application.Controllers
             // RETURN RESPONSE
             if (isCreated)
             {
-                return Ok("Bill deleted");
+                return Ok(true);
             }
             else
             {
-                return StatusCode(500, "Error while trying to delete the bill");
+                return StatusCode(500, false);
             }
         }
 
@@ -104,11 +104,11 @@ namespace ZDZCode_Api.Src.Application.Controllers
             // RETURN RESPONSE
             if (updatedBill != null)
             {
-                return Ok(updatedBill);
+                return Ok(true);
             }
             else
             {
-                return StatusCode(500, "Error while trying to update the bill");
+                return StatusCode(500, false);
             }
         }
     }

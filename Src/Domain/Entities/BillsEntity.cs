@@ -3,7 +3,7 @@
 namespace ZDZCode_Api.Src.Domain.Entities
 {
     [Serializable]
-    public class BillsEntity(string name, string value, string userID)
+    public class BillsEntity(string name, string value, string userEmail)
     {
         [Key]
         public Guid id { get; private set; } = Guid.NewGuid();
@@ -11,7 +11,7 @@ namespace ZDZCode_Api.Src.Domain.Entities
         public string value { get; set; } = value;
         public DateTime date { get; init; } = DateTime.Now;
 
-        public string userID { get; private set; } = userID;
+        public string userEmail { get; private set; } = userEmail;
         public virtual UserEntity? user { get;  private set; }
     }
 }

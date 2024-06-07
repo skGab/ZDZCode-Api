@@ -5,7 +5,7 @@ namespace ZDZCode_Api.Src.Domain.Repositories
 {
      public interface IBillsRepository
     {
-        BillsEntity[] GetAll(string userID);
+        BillsEntity[] GetAll(string userEmail);
         Task<bool> Create(BillsEntity data);
         Task<bool> Delete(Guid id);
         Task<BillsEntity?> Update(Guid id, UpdateBillDto billUpdate );

@@ -11,7 +11,7 @@ namespace ZDZCode_Api.Src.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>()
-                .HasKey(u => u.id);
+                .HasKey(u => u.email);
 
             modelBuilder.Entity<BillsEntity>()
                 .HasKey(b => b.id);
@@ -19,7 +19,7 @@ namespace ZDZCode_Api.Src.Infrastructure.Database
             modelBuilder.Entity<BillsEntity>()
                 .HasOne(a => a.user)
                 .WithMany(u => u.bills)
-                .HasForeignKey(b => b.userID);
+                .HasForeignKey(b => b.userEmail);
         }
     }
 }
